@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DUOKO - Results</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    :root {
+      --primary: #00c9ff;
+      --accent: #92fe9d;
+      --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --glass: rgba(255, 255, 255, 0.2);
+      --text: #fff;
+      --gold: #ffd700;
+      --silver: #c0c0c0;
+      --bronze: #cd7f32;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 60px 20px;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      margin-bottom: 40px;
+    }
+
+    .leaderboard {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 25px 35px;
+      width: 90%;
+      max-width: 550px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      animation: floatUp 0.8s ease-out;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 14px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    th {
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      letter-spacing: 1px;
+    }
+
+    td {
+      font-size: 1rem;
+    }
+
+    tr:first-child td {
+      font-weight: 700;
+      color: var(--gold);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+      transform: scale(1.05);
+    }
+
+    tr:nth-child(2) td { color: var(--silver); }
+    tr:nth-child(3) td { color: var(--bronze); }
+
+    .btn {
+      margin-top: 50px;
+      padding: 12px 30px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      font-size: 0.85rem;
+      opacity: 0.6;
+      text-align: center;
+    }
+
+    /* Winner glow animation */
+    .winner-glow {
+      animation: pulse 1.5s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { text-shadow: 0 0 10px gold; }
+      to { text-shadow: 0 0 25px gold; }
+    }
+  </style>
+</head>
+<body>
+  <h1>🏁 DUOKO  Results</h1>
+  <h2>Room Code: {{ room.code }}</h2>
+
+  <div class="leaderboard">
+    <table>
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Player</th>
+      <th>Time</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for player in ranked %}
+      <tr class="{% if player.rank == 1 %}winner-glow{% endif %}">
+        <td>#{{ player.rank }}</td>
+        <td>{{ player.name }}</td>
+        <td>{{ player.display_time }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+  </div>
+
+  <button class="btn" onclick="window.location.href='/'">Back to Home</button>
+
+  <footer>Made with 💙 by Sudoku Lovers!!!</footer>
+</body>
+</html>

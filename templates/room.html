@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Room {{ room.code }} | Sudoku Race</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    :root {
+      --primary: #00c9ff;
+      --accent: #92fe9d;
+      --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --text: #fff;
+      --glow: 0 0 15px rgba(0, 201, 255, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px 50px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.8s ease;
+      max-width: 420px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    p {
+      opacity: 0.85;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .room-code {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
+      padding: 12px 25px;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #fff;
+      box-shadow: var(--glow);
+      margin-bottom: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .room-code:hover {
+      transform: scale(1.05);
+      text-shadow: 0 0 15px var(--accent);
+    }
+
+    .btn {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 12px 35px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 201, 255, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 0 25px rgba(0, 201, 255, 0.6);
+    }
+
+    .waiting {
+      margin-top: 25px;
+      font-size: 1rem;
+      opacity: 0.8;
+      animation: pulse 1.6s infinite;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 0.85rem;
+      opacity: 0.6;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; text-shadow: 0 0 5px var(--accent); }
+      50% { opacity: 1; text-shadow: 0 0 20px var(--accent); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Welcome to Your Room</h1>
+    <p>Share this code with your friend to join the Sudoku Race!</p>
+
+    <div class="room-code">{{ room.code }}</div>
+
+    {% if is_host %}
+      <button class="btn" id="startBtn">Start Game 🚀</button>
+    {% else %}
+      <p class="waiting">⏳ Waiting for the host to start the game...</p>
+    {% endif %}
+
+    <footer></footer>
+  </div>
+
+  <script>
+    const roomCode = "{{ room.code }}";
+    const isHost = "{{ is_host|yesno:'true,false' }}" === "true";
+
+    async function checkGameStatus() {
+      try {
+        const response = await fetch(`/room_status/${roomCode}/`);
+        const data = await response.json();
+        if (data.started) {
+          window.location.href = `/game/${roomCode}/`;
+        }
+      } catch (err) {
+        console.error("Error checking room status:", err);
+      }
+    }
+
+    async function startGame() {
+      try {
+        const response = await fetch(`/start_game/${roomCode}/`, {
+          method: "POST",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" }
+        });
+        const data = await response.json();
+        if (data.success) {
+          window.location.href = `/game/${roomCode}/`;
+        } else {
+          alert("Couldn't start the game.");
+        }
+      } catch (err) {
+        console.error("Error starting game:", err);
+      }
+    }
+
+    if (isHost) {
+      document.getElementById("startBtn").addEventListener("click", startGame);
+    }
+
+    setInterval(checkGameStatus, 1500);
+    checkGameStatus();
+  </script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>✅ Solved Sudokus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #00c9ff;
+      --accent: #92fe9d;
+      --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --glass: rgba(255, 255, 255, 0.2);
+      --text: #fff;
+      --gold: #ffd700;
+      --silver: #c0c0c0;
+      --bronze: #cd7f32;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px;
+      color: var(--text);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .leaderboard {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 25px 35px;
+      width: 90%;
+      max-width: 600px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      animation: floatUp 0.8s ease-out;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    td {
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      margin-bottom: 15px;
+    }
+
+    .btn {
+      margin-top: 30px;
+      padding: 12px 30px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      font-size: 0.85rem;
+      opacity: 0.6;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>✅ Solved Sudokus</h1>
+
+  {% for room in rooms %}
+    <div class="leaderboard">
+      <h2>Room: {{ room.code }} | Winner: {{ room.winner }}</h2>
+      <table>
+        {% for row in room.solution %}
+          <tr>
+            {% for cell in row %}
+              <td>{{ cell }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  {% empty %}
+    <p>No solved Sudokus yet!</p>
+  {% endfor %}
+
+  <form action="{% url 'home' %}">
+    <button type="submit" class="btn">🏠 Back to Home</button>
+  </form>
+
+  <footer>Made with ❤️ for puzzle lovers</footer>
+</body>
+</html>

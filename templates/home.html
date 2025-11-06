@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DUOKO</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    :root {
+      --primary: #00c9ff;
+      --accent: #92fe9d;
+      --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --glass: rgba(255, 255, 255, 0.2);
+      --text: #fff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 30px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-align: center;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px 50px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      width: 90%;
+      max-width: 420px;
+      text-align: center;
+      transition: all 0.3s ease;
+      animation: floatUp 0.8s ease-out;
+    }
+
+    .card:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    input, select {
+      background: var(--glass);
+      color: var(--text);
+      text-align: center;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    button {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    button:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+    }
+
+    .divider {
+      position: relative;
+      margin: 20px 0;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 35%;
+      height: 1px;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.85rem;
+      opacity: 0.6;
+      text-align: center;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <h1>DUOKO</h1>
+
+  <div class="card">
+    <form method="POST" action="{% url 'home' %}">
+      {% csrf_token %}
+
+      <input type="text" name="player_name" placeholder="Enter your name" required>
+
+      <select name="difficulty" required>
+        <option value="">Select Difficulty</option>
+        <option value="easy">🌱 Easy</option>
+        <option value="medium">🌻 Medium</option>
+        <option value="hard">🔥 Hard</option>
+      </select>
+
+      <button type="submit" name="action" value="create">Create Game</button>
+
+      <div class="divider">or</div>
+
+      <input type="text" name="room_code" placeholder="Enter room code">
+      <button type="submit" name="action" value="join">Join Game</button>
+    </form>
+  </div>
+
+  <footer>Made with ❤️ for sudoku lovers</footer>
+</body>
+</html>
