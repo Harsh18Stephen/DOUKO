@@ -7,18 +7,16 @@ import uuid
 import json
 
 
-# 🏠 Home page – create or join a room
 def home(request):
     if request.method == "POST":
         name = request.POST.get("player_name")
         action = request.POST.get("action")
         request.session["player_name"] = name
 
-        # ✅ Create a new room
         if action == "create":
             puzzle, solution = generate_sudoku()
             room = Room.objects.create(
-                host=name,  # 👈 use host instead of name
+                host=name,  
                 code=str(uuid.uuid4())[:6].upper(),
                 puzzle=json.dumps(puzzle),
                 solution=json.dumps(solution),
@@ -27,7 +25,6 @@ def home(request):
             Player.objects.create(name=name, room=room)
             return redirect("room", code=room.code)
 
-        # ✅ Join an existing room
         elif action == "join":
             code = request.POST.get("room_code", "").upper()
             try:
@@ -40,17 +37,14 @@ def home(request):
     return render(request, "home.html")
 
 
-
-# 🧩 Room view – show players, start button for host
 def room(request, code):
     room = get_object_or_404(Room, code=code)
-    players = room.players.all()  # ✅ thanks to related_name="players"
+    players = room.players.all()  
     host = players.first()
     
     player_name = request.session.get("player_name")
     is_host = (player_name == host.name if host else False)
 
-    # Redirect directly to game if it’s already started
     if room.started:
         return redirect("game", code=room.code)
 
@@ -62,7 +56,6 @@ def room(request, code):
 
 from django.http import HttpResponse
 
-# 🕹️ Game page – render Sudoku puzzle
 def game(request, code):
     room = get_object_or_404(Room, code=code)
     puzzle = json.loads(room.puzzle)
@@ -77,8 +70,6 @@ def game(request, code):
     return render(request, "game.html", context)
 
 
-
-# 📊 API – check if game started
 def room_status(request, code):
     try:
         room = Room.objects.get(code=code)
@@ -86,8 +77,6 @@ def room_status(request, code):
     except Room.DoesNotExist:
         return JsonResponse({"error": "Room not found"}, status=404)
 
-
-# 🚀 API – start the game (host only)
 @csrf_exempt
 def start_game(request, code):
     try:
@@ -99,7 +88,6 @@ def start_game(request, code):
         return JsonResponse({"error": "Room not found"}, status=404)
 
 
-# 🧮 API – submit Sudoku solution
 @csrf_exempt
 def submit_solution(request, code):
     if request.method != "POST":
@@ -113,7 +101,6 @@ def submit_solution(request, code):
 
     solution = json.loads(room.solution)
 
-    # Normalize both for comparison
     grid_int = [[int(c) for c in r] for r in grid]
     solution_int = [[int(c) for c in r] for r in solution]
 
@@ -132,11 +119,9 @@ def submit_solution(request, code):
 
     return JsonResponse({"status": "wrong"})
 
-# 🏁 Results Page
 def result_view(request, code):
     room = get_object_or_404(Room, code=code)
-
-    # 🧩 Debug info
+ 
     print("DEBUG → room.player_times:", room.player_times)
     print("DEBUG → type:", type(room.player_times))
 
@@ -176,12 +161,11 @@ def solved_list(request):
     """
     Show all rooms/puzzles that have been solved.
     """
-    # Only get rooms with a winner (solved)
     solved_rooms = Room.objects.filter(winner__isnull=False)
 
     rooms_data = []
     for room in solved_rooms:
-        puzzle = json.loads(room.solution)  # show solution
+        puzzle = json.loads(room.solution)
         rooms_data.append({
             "code": room.code,
             "winner": room.winner,
