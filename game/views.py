@@ -158,9 +158,7 @@ def add_player_result(self, player_name, time_taken):
     self.save()
     
 def solved_list(request):
-    """
-    Show all rooms/puzzles that have been solved.
-    """
+    
     solved_rooms = Room.objects.filter(winner__isnull=False)
 
     rooms_data = []

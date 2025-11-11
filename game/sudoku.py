@@ -6,7 +6,6 @@ SUBGRID_SIZE = 3
 
 
 def find_empty(grid):
-    """Finds the next empty cell (0 = empty)."""
     for r in range(GRID_SIZE):
         for c in range(GRID_SIZE):
             if grid[r][c] == 0:
@@ -15,7 +14,6 @@ def find_empty(grid):
 
 
 def valid(grid, num, pos):
-    """Checks if num can be placed at pos (row, col)."""
     r, c = pos
 
     if num in grid[r]:
@@ -71,7 +69,7 @@ def fill_grid(grid):
             grid[r][c] = 0
     return False
 
-# check unique 
+# check if unique 
 def count_solutions(grid):
     find = find_empty(grid)
     if not find:
@@ -133,7 +131,7 @@ def generate_sudoku(difficulty="medium", seed=None):
 
     return puzzle, solution
 
-# text
+
 if __name__ == "__main__":
     for level in ["easy", "medium", "hard"]:
         print(f"\n=== {level.upper()} ===")

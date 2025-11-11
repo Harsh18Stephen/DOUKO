@@ -14,12 +14,12 @@ class Room(models.Model):
     code = models.CharField(max_length=10, unique=True, default=generate_unique_code)
     host = models.CharField(max_length=100)
     difficulty = models.CharField(max_length=10, default="easy")
-    puzzle = models.TextField()   # JSON string of puzzle grid
-    solution = models.TextField() # JSON string of solved grid
+    puzzle = models.TextField()   
+    solution = models.TextField() 
     winner = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     started = models.BooleanField(default=False)
-    player_times = models.JSONField(default=list)  # store [{"name":..., "time":...}, ...]
+    player_times = models.JSONField(default=list) 
 
     def __str__(self):
         return f"Room {self.code} ({self.difficulty})"
